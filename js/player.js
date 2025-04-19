@@ -170,7 +170,7 @@ const Player = {
         }
 
         // Movement blocked
-        UI.addMessage("You can't move there.", 'system');
+        UI.logMessage("You can't move there.", 'system');
         return false;
     },
 
@@ -182,13 +182,13 @@ const Player = {
 
         // Check for exit
         if (cellType === Dungeon.CELL_TYPES.EXIT) {
-            UI.addMessage("You found the exit! Press 'Space' to descend.", 'system');
+            UI.logMessage("You found the exit! Press 'Space' to descend.", 'system');
         }
 
         // Check for items
         const item = Items.getItemAt(this.x, this.y);
         if (item) {
-            UI.addMessage(`You see ${item.name} here. Press 'Space' to pick it up.`, 'item');
+            UI.logMessage(`You see ${item.name} here. Press 'Space' to pick it up.`, 'item');
         }
     },
 
@@ -214,12 +214,12 @@ const Player = {
         const item = Items.getItemAt(this.x, this.y);
 
         if (!item) {
-            UI.addMessage("There's nothing to pick up here.", 'system');
+            UI.logMessage("There's nothing to pick up here.", 'system');
             return false;
         }
 
         if (this.inventory.length >= this.maxInventorySize) {
-            UI.addMessage("Your inventory is full!", 'system');
+            UI.logMessage("Your inventory is full!", 'system');
             return false;
         }
 
@@ -229,7 +229,7 @@ const Player = {
         // Remove item from dungeon
         Items.removeItemAt(this.x, this.y);
 
-        UI.addMessage(`You picked up ${item.name}.`, 'item');
+        UI.logMessage(`You picked up ${item.name}.`, 'item');
         return true;
     },
 
@@ -247,17 +247,17 @@ const Player = {
 
         // Check if item is usable
         if (!item.usable) {
-            UI.addMessage(`You can't use the ${item.name}.`, 'system');
+            UI.logMessage(`You can't use the ${item.name}.`, 'system');
             return false;
         }
 
         // Apply item effects
         if (item.effect.type === 'heal') {
             this.heal(item.effect.value);
-            UI.addMessage(`You used ${item.name} and restored ${item.effect.value} health.`, 'item');
+            UI.logMessage(`You used ${item.name} and restored ${item.effect.value} health.`, 'item');
         } else if (item.effect.type === 'energy') {
             this.restoreEnergy(item.effect.value);
-            UI.addMessage(`You used ${item.name} and restored ${item.effect.value} energy.`, 'item');
+            UI.logMessage(`You used ${item.name} and restored ${item.effect.value} energy.`, 'item');
         }
 
         // Remove item from inventory if consumable
@@ -282,7 +282,7 @@ const Player = {
 
         // Check if item is equippable
         if (!item.equippable) {
-            UI.addMessage(`You can't equip the ${item.name}.`, 'system');
+            UI.logMessage(`You can't equip the ${item.name}.`, 'system');
             return false;
         }
 
@@ -301,7 +301,7 @@ const Player = {
         // Remove from inventory
         this.inventory.splice(inventoryIndex, 1);
 
-        UI.addMessage(`You equipped ${item.name}.`, 'item');
+        UI.logMessage(`You equipped ${item.name}.`, 'item');
 
         return true;
     },
@@ -344,7 +344,7 @@ const Player = {
 
         this.hp -= actualDamage;
 
-        UI.addMessage(`You take ${actualDamage} damage!`, 'combat');
+        UI.logMessage(`You take ${actualDamage} damage!`, 'combat');
 
         // Check if player died
         if (this.hp <= 0) {
@@ -360,7 +360,7 @@ const Player = {
      */
     die: function() {
         this.hp = 0;
-        UI.addMessage("You have been defeated!", 'combat');
+        UI.logMessage("You have been defeated!", 'combat');
         Game.state.running = false;
         Game.state.currentScreen = 'gameover';
         UI.showGameOver();
@@ -392,7 +392,7 @@ const Player = {
     addExperience: function(amount) {
         this.xp += amount;
 
-        UI.addMessage(`You gained ${amount} experience.`, 'system');
+        UI.logMessage(`You gained ${amount} experience.`, 'system');
 
         // Check for level up
         if (this.xp >= this.xpToNextLevel) {
@@ -429,7 +429,7 @@ const Player = {
             this.constitution += 2;
         }
 
-        UI.addMessage(`You reached level ${this.level}!`, 'system');
+        UI.logMessage(`You reached level ${this.level}!`, 'system');
     },
 
     /**

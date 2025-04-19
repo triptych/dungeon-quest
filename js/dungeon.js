@@ -47,12 +47,30 @@ const Dungeon = {
         this.rooms = [];
         this.corridors = [];
 
-        // Create empty grid filled with walls
-        this.grid = Utils.create2DArray(width, height, this.CELL_TYPES.WALL);
+        try {
+            // Create empty grid filled with walls
+            this.grid = [];
+            for (let y = 0; y < height; y++) {
+                this.grid[y] = [];
+                for (let x = 0; x < width; x++) {
+                    this.grid[y][x] = this.CELL_TYPES.WALL;
+                }
+            }
 
-        // Initialize visibility grids
-        this.visible = Utils.create2DArray(width, height, false);
-        this.explored = Utils.create2DArray(width, height, false);
+            // Initialize visibility grids manually to ensure they exist
+            this.visible = [];
+            this.explored = [];
+            for (let y = 0; y < height; y++) {
+                this.visible[y] = [];
+                this.explored[y] = [];
+                for (let x = 0; x < width; x++) {
+                    this.visible[y][x] = false;
+                    this.explored[y][x] = false;
+                }
+            }
+        } catch (error) {
+            console.error("Error initializing dungeon arrays:", error);
+        }
 
         // Generate rooms using Binary Space Partitioning
         this.generateRooms();
@@ -121,6 +139,10 @@ const Dungeon = {
             for (let y = room.y; y < room.y + room.height; y++) {
                 for (let x = room.x; x < room.x + room.width; x++) {
                     if (Utils.isInBounds(x, y, this.width, this.height)) {
+                        // Ensure the grid row exists before setting a value
+                        if (!this.grid[y]) {
+                            this.grid[y] = [];
+                        }
                         this.grid[y][x] = this.CELL_TYPES.FLOOR;
                     }
                 }
@@ -257,6 +279,10 @@ const Dungeon = {
         const endX = Math.max(x1, cornerX);
         for (let x = startX; x <= endX; x++) {
             if (Utils.isInBounds(x, y1, this.width, this.height)) {
+                // Make sure the grid row exists before setting the cell type
+                if (!this.grid[y1]) {
+                    this.grid[y1] = [];
+                }
                 this.grid[y1][x] = this.CELL_TYPES.FLOOR;
             }
         }
@@ -266,6 +292,10 @@ const Dungeon = {
         const endY = Math.max(cornerY, y2);
         for (let y = startY; y <= endY; y++) {
             if (Utils.isInBounds(cornerX, y, this.width, this.height)) {
+                // Make sure the grid and the row exist before setting the cell type
+                if (!this.grid[y]) {
+                    this.grid[y] = [];
+                }
                 this.grid[y][cornerX] = this.CELL_TYPES.FLOOR;
             }
         }
@@ -282,6 +312,10 @@ const Dungeon = {
             y: entranceRoom.centerY
         };
 
+        // Ensure the grid row exists
+        if (!this.grid[this.entrance.y]) {
+            this.grid[this.entrance.y] = [];
+        }
         this.grid[this.entrance.y][this.entrance.x] = this.CELL_TYPES.ENTRANCE;
 
         // Place exit in the last room
@@ -291,6 +325,10 @@ const Dungeon = {
             y: exitRoom.centerY
         };
 
+        // Ensure the grid row exists
+        if (!this.grid[this.exit.y]) {
+            this.grid[this.exit.y] = [];
+        }
         this.grid[this.exit.y][this.exit.x] = this.CELL_TYPES.EXIT;
     },
 
@@ -328,6 +366,10 @@ const Dungeon = {
             this.getCellType(x, y) === this.CELL_TYPES.FLOOR) {
             // 30% chance of placing a door
             if (Math.random() < 0.3) {
+                // Ensure the grid row exists
+                if (!this.grid[y]) {
+                    this.grid[y] = [];
+                }
                 this.grid[y][x] = this.CELL_TYPES.DOOR;
             }
         }
@@ -341,7 +383,11 @@ const Dungeon = {
      */
     getCellType: function(x, y) {
         if (Utils.isInBounds(x, y, this.width, this.height)) {
-            return this.grid[y][x];
+            // Check if the grid row exists
+            if (!this.grid[y]) {
+                return this.CELL_TYPES.WALL; // Treat as wall if row doesn't exist
+            }
+            return this.grid[y][x] !== undefined ? this.grid[y][x] : this.CELL_TYPES.WALL;
         }
         return this.CELL_TYPES.WALL; // Consider out of bounds as walls
     },
@@ -361,21 +407,45 @@ const Dungeon = {
      * @param {number} radius - Visibility radius
      */
     updateVisibility: function(playerX, playerY, radius) {
-        // Reset visibility grid
-        this.visible = Utils.create2DArray(this.width, this.height, false);
+        try {
+            // Reset visibility grid manually
+            this.visible = [];
+            for (let y = 0; y < this.height; y++) {
+                this.visible[y] = [];
+                for (let x = 0; x < this.width; x++) {
+                    this.visible[y][x] = false;
+                }
+            }
 
-        // Mark cells as visible using a simple circle algorithm
-        for (let y = playerY - radius; y <= playerY + radius; y++) {
-            for (let x = playerX - radius; x <= playerX + radius; x++) {
-                if (Utils.isInBounds(x, y, this.width, this.height)) {
-                    // Simple distance check for now (will be replaced with proper FOV)
-                    const distance = Utils.gridDistance(playerX, playerY, x, y);
-                    if (distance <= radius) {
-                        this.visible[y][x] = true;
-                        this.explored[y][x] = true;
+            // Make sure explored grid is initialized
+            if (!this.explored || !this.explored.length) {
+                this.explored = [];
+                for (let y = 0; y < this.height; y++) {
+                    this.explored[y] = [];
+                    for (let x = 0; x < this.width; x++) {
+                        this.explored[y][x] = false;
                     }
                 }
             }
+
+            // Mark cells as visible using a simple circle algorithm
+            for (let y = playerY - radius; y <= playerY + radius; y++) {
+                for (let x = playerX - radius; x <= playerX + radius; x++) {
+                    if (Utils.isInBounds(x, y, this.width, this.height)) {
+                        // Simple distance check for now (will be replaced with proper FOV)
+                        const distance = Utils.gridDistance(playerX, playerY, x, y);
+                        if (distance <= radius) {
+                            if (!this.visible[y]) this.visible[y] = [];
+                            if (!this.explored[y]) this.explored[y] = [];
+
+                            this.visible[y][x] = true;
+                            this.explored[y][x] = true;
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.error("Error updating visibility:", error);
         }
     },
 
@@ -387,6 +457,11 @@ const Dungeon = {
      */
     isWalkable: function(x, y) {
         if (!Utils.isInBounds(x, y, this.width, this.height)) {
+            return false;
+        }
+
+        // Check if the grid row exists
+        if (!this.grid[y]) {
             return false;
         }
 
@@ -432,7 +507,28 @@ const Dungeon = {
         this.exit = data.exit;
         this.explored = data.explored;
 
-        // Re-initialize visibility grid
-        this.visible = Utils.create2DArray(this.width, this.height, false);
+        try {
+            // Re-initialize visibility grid manually
+            this.visible = [];
+            for (let y = 0; y < this.height; y++) {
+                this.visible[y] = [];
+                for (let x = 0; x < this.width; x++) {
+                    this.visible[y][x] = false;
+                }
+            }
+
+            // Make sure explored is properly initialized
+            if (!this.explored || !this.explored.length) {
+                this.explored = [];
+                for (let y = 0; y < this.height; y++) {
+                    this.explored[y] = [];
+                    for (let x = 0; x < this.width; x++) {
+                        this.explored[y][x] = false;
+                    }
+                }
+            }
+        } catch (error) {
+            console.error("Error initializing visibility in loadSaveData:", error);
+        }
     }
 };

@@ -3,9 +3,11 @@
 ## Project Setup & Architecture
 - [x] Create project directory structure
 - [x] Setup initial HTML, CSS, and JS files
-- [ ] Create Git repository
+- [x] Create Git repository
+- [x] Set up GitHub integration
 - [ ] Configure local development environment
 - [ ] Establish coding standards and conventions
+- [ ] Create project README with setup instructions
 
 ## Core Game Mechanics
 - [x] Implement grid-based movement system
@@ -53,10 +55,10 @@
 - [x] Implement minimap for explored areas
 - [x] Create action bar for common commands
 - [x] Develop message log system
-- [ ] Implement keyboard controls
-- [ ] Implement mouse/touch controls
-- [ ] Create inventory management screen
-- [ ] Design character sheet interface
+- [x] Implement keyboard controls
+- [x] Implement mouse/touch controls
+- [x] Create inventory management screen
+- [x] Design character sheet interface
 - [ ] Build settings and help menus
 - [ ] Implement drag-and-drop functionality
 
@@ -71,6 +73,26 @@
 - [ ] Create visual effects for combat and spells
 - [ ] Implement lighting and shadow effects
 
+## Item System
+- [ ] Create items.js file for item management
+- [ ] Design item categories (weapons, armor, consumables, charms)
+- [ ] Implement item rarity system with stat scaling
+- [ ] Create item generation algorithms based on dungeon depth
+- [ ] Design unique and legendary items with special effects
+- [ ] Implement item durability system
+- [ ] Create potion and scroll effects
+- [ ] Design equipment enhancement mechanics
+
+## Game Content
+- [ ] Create game narrative and backstory
+- [ ] Design dungeon themes with distinct aesthetics and challenges
+- [ ] Create boss characters with unique mechanics and lore
+- [ ] Develop NPC characters and their dialogue
+- [ ] Design quest system with primary and optional objectives
+- [ ] Create environmental storytelling elements
+- [ ] Implement lore discovery through found items and inscriptions
+- [ ] Design narrative progression across dungeon depths
+
 ## Audio Implementation
 - [ ] Create or source sound effects for movement
 - [ ] Create or source sound effects for combat
@@ -78,6 +100,7 @@
 - [ ] Create or source background music
 - [ ] Implement audio manager system
 - [ ] Add audio feedback for UI interactions
+- [ ] Create distinct audio profiles for different dungeon themes
 
 ## Game Progression & Balance
 - [ ] Design difficulty curve across dungeon levels
@@ -88,6 +111,9 @@
 - [ ] Create item identification and enchantment systems
 - [ ] Implement daily challenges with fixed seeds
 - [ ] Balance resource distribution throughout dungeons
+- [ ] Design crafting system for item creation
+- [ ] Create achievement system to track player milestones
+- [ ] Implement player ranking system based on score/achievement
 
 ## Technical Implementation
 - [ ] Decide on rendering approach (table, CSS grid, or canvas)
@@ -98,6 +124,9 @@
 - [ ] Implement lazy loading for assets
 - [ ] Create export/import functionality for saves
 - [ ] Optimize memory management for extended play
+- [ ] Implement auto-save feature at key points
+- [ ] Create multiple save slots for different characters
+- [ ] Design offline capabilities using PWA techniques
 
 ## Testing & Optimization
 - [ ] Create test scenarios for game mechanics
@@ -108,6 +137,8 @@
 - [ ] Gather user feedback
 - [ ] Fix bugs and address performance issues
 - [ ] Implement accessibility features
+- [ ] Create balance testing methodology
+- [ ] Perform playthrough tests for difficulty assessment
 
 ## Documentation & Release
 - [ ] Create player manual/instructions
@@ -116,6 +147,8 @@
 - [ ] Create project README
 - [ ] Plan post-launch content updates
 - [ ] Design community feedback channels
+- [ ] Create in-game tutorial system
+- [ ] Develop beginner's guide with tips and strategies
 
 ## Future Expansion Ideas
 - [ ] Design asynchronous multiplayer features
@@ -123,3 +156,6 @@
 - [ ] Design boss rush mode
 - [ ] Research PWA implementation for offline play
 - [ ] Plan advanced lighting and particle effects
+- [ ] Design new game+ mode with increased difficulty
+- [ ] Create custom challenge modes with modifiers
+- [ ] Plan seasonal events with unique content

@@ -1,5 +1,46 @@
 /* Dungeon Quest - Character and Monster Styles */
 
+/* Player and Entity Icons in Dungeon Grid */
+.player-icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #5df;
+    z-index: 10;
+}
+
+.entity-icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    z-index: 5;
+}
+
+.entity-enemy {
+    color: #f55;
+}
+
+.entity-npc {
+    color: #5d5;
+}
+
+.entity-trap {
+    color: #ff5;
+}
+
 /* Player Character */
 .player {
     position: absolute;

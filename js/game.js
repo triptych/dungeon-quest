@@ -25,9 +25,15 @@ const Game = {
     init: function() {
         console.log('Initializing Dungeon Quest...');
 
+        // Cache important elements
+        this.elements = {
+            dungeonView: document.getElementById('dungeon-view')
+        };
+
         // Initialize game modules
         UI.init();
         Player.init();
+        Items.init();
 
         // Setup event listeners
         this.setupEventListeners();
@@ -74,6 +80,93 @@ const Game = {
                     break;
             }
         });
+
+        // Mouse/Touch events for the dungeon view
+        this.elements.dungeonView = document.getElementById('dungeon-view');
+        this.elements.dungeonView.addEventListener('click', (e) => {
+            if (!this.state.running) return;
+            this.handleDungeonClick(e);
+        });
+
+        // Touch events for mobile
+        this.elements.dungeonView.addEventListener('touchend', (e) => {
+            if (!this.state.running) return;
+            e.preventDefault(); // Prevent default behavior like scrolling
+
+            // Use the first touch point
+            if (e.changedTouches.length > 0) {
+                const touch = e.changedTouches[0];
+                this.handleDungeonClick(touch);
+            }
+        }, { passive: false });
+    },
+
+    /**
+     * Handle click/touch on the dungeon view
+     * @param {Event|Touch} event - The click event or touch object
+     */
+    handleDungeonClick: function(event) {
+        // Get click position relative to dungeon view
+        const rect = this.elements.dungeonView.getBoundingClientRect();
+        const clickX = (event.clientX || event.pageX) - rect.left;
+        const clickY = (event.clientY || event.pageY) - rect.top;
+
+        // Calculate cell size based on dungeon view dimensions and dungeon size
+        const cellWidth = rect.width / Dungeon.width;
+        const cellHeight = rect.height / Dungeon.height;
+
+        // Calculate which cell was clicked
+        const cellX = Math.floor(clickX / cellWidth);
+        const cellY = Math.floor(clickY / cellHeight);
+
+        // Safety check for within bounds
+        if (!Utils.isInBounds(cellX, cellY, Dungeon.width, Dungeon.height)) {
+            return;
+        }
+
+        // Only allow clicking adjacent cells to the player or the player's cell
+        const dx = cellX - Player.x;
+        const dy = cellY - Player.y;
+
+        // Check if clicked cell is the player's position
+        if (dx === 0 && dy === 0) {
+            // Clicking on player could be a 'wait' action
+            this.handlePlayerAction();
+            return;
+        }
+
+        // Check if clicked cell is adjacent
+        if (Math.abs(dx) <= 1 && Math.abs(dy) <= 1) {
+            // Move player toward the clicked cell
+            this.handlePlayerMove(dx, dy);
+        } else {
+            // For cells farther away, calculate the direction to move
+            // This will allow players to click farther cells to move in that direction
+            this.handleMovementTowardCell(cellX, cellY);
+        }
+    },
+
+    /**
+     * Handle movement toward a distant cell
+     * @param {number} targetX - Target cell X coordinate
+     * @param {number} targetY - Target cell Y coordinate
+     */
+    handleMovementTowardCell: function(targetX, targetY) {
+        // Determine primary direction to move based on which difference is larger
+        const dx = targetX - Player.x;
+        const dy = targetY - Player.y;
+
+        // Normalize to get direction (-1, 0, 1)
+        const moveX = dx !== 0 ? (dx > 0 ? 1 : -1) : 0;
+        const moveY = dy !== 0 ? (dy > 0 ? 1 : -1) : 0;
+
+        // If moving diagonally is allowed in your game, you can use both
+        // For simplicity, prioritize the axis with the larger difference
+        if (Math.abs(dx) >= Math.abs(dy)) {
+            this.handlePlayerMove(moveX, 0);
+        } else {
+            this.handlePlayerMove(0, moveY);
+        }
     },
 
     /**
@@ -143,6 +236,9 @@ const Game = {
      * Update all UI elements
      */
     updateUI: function() {
+        // Render dungeon grid
+        UI.renderDungeon(Dungeon, Player);
+
         // Update player stats
         UI.updatePlayerStats(Player);
 

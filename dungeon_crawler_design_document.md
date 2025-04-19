@@ -24,6 +24,7 @@ Players navigate through a series of procedurally generated dungeon floors, batt
 - **HTML5**: For structuring game elements and UI components
 - **CSS3**: For styling, animations, and responsive design
 - **Vanilla JavaScript**: For game logic, procedural generation, and DOM manipulation
+- **Client-Side Only**: No server-side components, Node.js, or backend dependencies
 
 ### Code Organization
 ```
@@ -50,8 +51,9 @@ Players navigate through a series of procedurally generated dungeon floors, batt
 ```
 
 ### Data Storage
-- Local storage API for saving game progress
+- Browser's Local Storage API for saving game progress
 - JSON structures for game state, inventory, and character stats
+- Fully client-side data persistence (no server database or cloud saves)
 
 ### Browser Compatibility
 - Target: Modern browsers (Chrome, Firefox, Safari, Edge)
@@ -248,7 +250,7 @@ Players navigate through a series of procedurally generated dungeon floors, batt
 - Browser compatibility testing
 - Performance optimization
 - Community feedback implementation
-- New content updates
+- New content updates (distributed as static files)
 
 ---
 
@@ -265,6 +267,7 @@ Players navigate through a series of procedurally generated dungeon floors, batt
 - Improved procedural generation algorithms
 - Advanced lighting and particle effects
 - Accessibility options for diverse players
+- Export/import save data between devices (to compensate for lack of cloud saves)
 
 ---
 
@@ -272,4 +275,4 @@ Players navigate through a series of procedurally generated dungeon floors, batt
 
 Dungeon Quest aims to capture the essence of classic dungeon crawlers while leveraging modern web technologies for accessibility and performance. By focusing on core roguelike elements — procedural generation, turn-based combat, and meaningful progression — the game will provide engaging short play sessions with sufficient depth to reward mastering its systems.
 
-The vanilla HTML/CSS/JS implementation ensures the widest possible reach across devices and browsers, with an emphasis on lightweight performance that doesn't sacrifice engaging gameplay. This design document serves as a foundation for development, with the understanding that player feedback and technical constraints may necessitate adjustments during implementation.
+The vanilla HTML/CSS/JS implementation ensures the widest possible reach across devices and browsers, with an emphasis on lightweight performance that doesn't sacrifice engaging gameplay. As a completely client-side application with no server dependencies, the game can be hosted on any static file hosting service and played without an internet connection after initial load. This design document serves as a foundation for development, with the understanding that player feedback and technical constraints may necessitate adjustments during implementation.

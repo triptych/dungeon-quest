@@ -1,5 +1,77 @@
 # Dungeon Quest: Release Notes
 
+## Version 0.7 - Character Sheet Implementation (April 19, 2025)
+
+### Added
+- Designed and implemented comprehensive character sheet interface
+- Created detailed character attribute display with tooltips
+- Added equipment summary with equipped items overview
+- Implemented derived combat statistics section showing damage, defense, critical hit chance, and dodge chance
+- Included character portrait with class-specific icons
+- Added resource tracking for health, energy, and experience
+- Created smooth navigation between character sheet and inventory
+- Implemented responsive UI layout for different screen sizes
+
+### Technical Details
+- Used DOM manipulation to create dynamic character sheet elements
+- Implemented attribute tooltips to explain game mechanics
+- Created class-based portrait representation for visual identification
+- Calculated derived statistics based on character attributes and equipment
+- Used CSS Grid and Flexbox for responsive layout
+- Implemented clean UI/UX that matches the game's visual style
+
+### Next Steps
+- Build settings and help menus
+- Implement drag-and-drop functionality for inventory management
+- Create items.js file and item management system
+
+## Version 0.6 - Inventory Management Implementation (April 18, 2025)
+
+### Added
+- Designed and implemented complete inventory management screen
+- Created dynamic equipment slot system with visual feedback
+- Implemented item listing with selection functionality
+- Added item usage, equipping, and dropping capabilities
+- Implemented item description display for selected items
+- Created capacity indicator to show inventory space usage
+- Added gold display for economic progression
+
+### Technical Details
+- Used DOM manipulation for dynamic inventory creation
+- Implemented event delegation for efficient item selection
+- Created modular dialog system for item actions confirmation
+- Used CSS Grid and Flexbox for responsive inventory layout
+- Added visual feedback for item selection and action states
+- Implemented item icon system with type-based visualization
+
+### Next Steps
+- Design and implement character sheet interface
+- Build settings and help menus
+- Implement drag-and-drop functionality for inventory management
+
+## Version 0.5 - Input Controls Implementation (April 18, 2025)
+
+### Added
+- Fully implemented keyboard controls for player movement and actions
+- Added mouse/touch controls for dungeon interaction
+- Implemented grid-based click movement system
+- Created intelligent pathfinding for remote cell clicks
+- Added cell-specific interaction detection
+- Implemented responsive UI for both desktop and mobile
+- Added touch event handling with gesture support
+
+### Technical Details
+- Used event delegation for efficient click handling
+- Implemented coordinate translation between screen and grid positions
+- Created adaptive touch detection for mobile devices
+- Added fallback mechanisms for different input types
+- Optimized event listeners to prevent performance issues
+
+### Next Steps
+- Create inventory management screen
+- Design and implement character sheet interface
+- Build settings and help menus
+
 ## Version 0.4 - Minimap Implementation (April 18, 2025)
 
 ### Added
