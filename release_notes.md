@@ -1,5 +1,25 @@
 # Dungeon Quest: Release Notes
 
+## Version 0.4 - Minimap Implementation (April 18, 2025)
+
+### Added
+- Fully implemented functional minimap for visualizing explored dungeon areas
+- Created minimap rendering system that shows explored areas and player position
+- Added dynamic minimap scaling to fit large dungeons in the display area
+- Implemented color-coded representation of different dungeon elements (walls, floors, doors, etc.)
+- Enhanced toggle functionality to show/hide minimap
+
+### Technical Details
+- Implemented efficient rendering of minimap cells using DOM manipulation
+- Created visibility system to differentiate between currently visible and previously explored areas
+- Ensured minimap is properly updated during player movement and dungeon exploration
+- Optimized minimap rendering to handle large dungeons without performance issues
+
+### Next Steps
+- Implement keyboard and mouse controls
+- Create inventory management system
+- Design and implement the character sheet interface
+
 ## Version 0.3 - User Interface Implementation (April 18, 2025)
 
 ### Added

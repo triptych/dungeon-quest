@@ -137,6 +137,38 @@
     border: 1px solid #444;
     z-index: 100;
     padding: 5px;
+    overflow: hidden;
+}
+
+.minimap-container {
+    position: relative;
+    margin: 0 auto;
+}
+
+.minimap-cell {
+    position: absolute;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+}
+
+#toggle-minimap {
+    position: absolute;
+    top: 165px;
+    right: 10px;
+    background-color: #333;
+    color: #fff;
+    border: 1px solid #444;
+    padding: 5px 10px;
+    cursor: pointer;
+    z-index: 100;
+}
+
+#toggle-minimap:hover {
+    background-color: #444;
+}
+
+.hidden {
+    display: none !important;
 }
 
 /* Menus */

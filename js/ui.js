@@ -90,8 +90,11 @@ const UI = {
      * Setup the minimap display
      */
     setupMinimap: function() {
-        // Minimap implementation will be added later
-        this.elements.minimap.innerHTML = '<div class="minimap-placeholder">Map</div>';
+        // Initialize the minimap with a grid
+        this.elements.minimap.innerHTML = '<div class="minimap-container"></div>';
+
+        // Get the minimap container
+        this.elements.minimapContainer = document.querySelector('.minimap-container');
     },
 
     /**
@@ -161,8 +164,69 @@ const UI = {
      * @param {Object} player - The player object with position data
      */
     renderMinimap: function(dungeon, player) {
-        // This will be implemented when the minimap feature is developed
-        // For now, just a placeholder
+        // Clear the previous minimap content
+        this.elements.minimapContainer.innerHTML = '';
+
+        // Calculate the scale factor to fit the dungeon on the minimap
+        const minimapWidth = 150;
+        const minimapHeight = 150;
+        const cellSize = Math.min(
+            Math.floor(minimapWidth / dungeon.width),
+            Math.floor(minimapHeight / dungeon.height)
+        );
+
+        // Set the container size based on the scaled dungeon
+        this.elements.minimapContainer.style.width = (dungeon.width * cellSize) + 'px';
+        this.elements.minimapContainer.style.height = (dungeon.height * cellSize) + 'px';
+        this.elements.minimapContainer.style.position = 'relative';
+
+        // Create minimap cells for each explored dungeon cell
+        for (let y = 0; y < dungeon.height; y++) {
+            for (let x = 0; x < dungeon.width; x++) {
+                // Only show cells that have been explored
+                if (dungeon.explored[y][x]) {
+                    const cellType = dungeon.grid[y][x];
+                    const isVisible = dungeon.visible[y][x];
+                    const isPlayerPosition = (player.x === x && player.y === y);
+
+                    // Create a cell element
+                    const cell = document.createElement('div');
+                    cell.className = 'minimap-cell';
+                    cell.style.width = cellSize + 'px';
+                    cell.style.height = cellSize + 'px';
+                    cell.style.position = 'absolute';
+                    cell.style.left = (x * cellSize) + 'px';
+                    cell.style.top = (y * cellSize) + 'px';
+
+                    // Set cell color based on type
+                    if (isPlayerPosition) {
+                        cell.style.backgroundColor = '#f00'; // Player is red
+                    } else {
+                        switch (cellType) {
+                            case dungeon.CELL_TYPES.WALL:
+                                cell.style.backgroundColor = '#444'; // Wall is dark gray
+                                break;
+                            case dungeon.CELL_TYPES.FLOOR:
+                                cell.style.backgroundColor = isVisible ? '#aaa' : '#666'; // Floor is light/dark gray
+                                break;
+                            case dungeon.CELL_TYPES.DOOR:
+                                cell.style.backgroundColor = '#a52'; // Door is brown
+                                break;
+                            case dungeon.CELL_TYPES.ENTRANCE:
+                                cell.style.backgroundColor = '#0a0'; // Entrance is green
+                                break;
+                            case dungeon.CELL_TYPES.EXIT:
+                                cell.style.backgroundColor = '#00a'; // Exit is blue
+                                break;
+                            default:
+                                cell.style.backgroundColor = '#666'; // Default is gray
+                        }
+                    }
+
+                    this.elements.minimapContainer.appendChild(cell);
+                }
+            }
+        }
     },
 
     /**
@@ -207,6 +271,78 @@ const UI = {
         // Add to document
         overlay.appendChild(dialog);
         document.body.appendChild(overlay);
+    },
+
+    /**
+     * Show the game title screen
+     */
+    showTitleScreen: function() {
+        // Create title screen elements
+        const titleScreen = document.createElement('div');
+        titleScreen.id = 'title-screen';
+        titleScreen.className = 'game-menu';
+
+        // Add title
+        const gameTitle = document.createElement('h1');
+        gameTitle.className = 'menu-title';
+        gameTitle.textContent = 'DUNGEON QUEST';
+        titleScreen.appendChild(gameTitle);
+
+        // Add subtitle
+        const subtitle = document.createElement('p');
+        subtitle.className = 'subtitle';
+        subtitle.textContent = 'A Roguelike Adventure';
+        titleScreen.appendChild(subtitle);
+
+        // Add menu options
+        const startGame = document.createElement('div');
+        startGame.className = 'menu-option';
+        startGame.textContent = 'Start New Game';
+        startGame.addEventListener('click', () => {
+            document.body.removeChild(titleScreen);
+            Game.startNewGame();
+        });
+        titleScreen.appendChild(startGame);
+
+        const loadGame = document.createElement('div');
+        loadGame.className = 'menu-option';
+        loadGame.textContent = 'Load Game';
+        loadGame.addEventListener('click', () => {
+            document.body.removeChild(titleScreen);
+            if (!Game.loadGame()) {
+                // If loading failed, start a new game
+                Game.startNewGame();
+            }
+        });
+        titleScreen.appendChild(loadGame);
+
+        // Add to document
+        document.body.appendChild(titleScreen);
+    },
+
+    /**
+     * Update the game screen
+     * Currently unused but mentioned in code
+     */
+    updateGameScreen: function() {
+        // This functionality is now handled by Game.updateUI()
+        console.log('updateGameScreen is deprecated, use Game.updateUI() instead');
+    },
+
+    /**
+     * Toggle the inventory screen
+     */
+    toggleInventory: function() {
+        // This will be implemented when inventory feature is developed
+        this.logMessage('Inventory not yet implemented', 'system');
+    },
+
+    /**
+     * Toggle the pause menu
+     */
+    togglePauseMenu: function() {
+        // This will be implemented when pause menu feature is developed
+        this.logMessage('Pause menu not yet implemented', 'system');
     }
 };
 
@@ -214,3 +350,27 @@ const UI = {
 document.addEventListener('DOMContentLoaded', () => {
     UI.init();
 });
+
+// Add CSS for title screen
+document.head.insertAdjacentHTML('beforeend', `
+<style>
+#title-screen {
+    background-color: #111;
+    width: 400px;
+    height: 300px;
+    text-align: center;
+}
+
+#title-screen h1 {
+    font-size: 36px;
+    color: #ff9;
+    margin: 20px 0;
+    text-shadow: 2px 2px 4px #000;
+}
+
+#title-screen .subtitle {
+    color: #aaa;
+    margin-bottom: 30px;
+}
+</style>
+`);

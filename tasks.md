@@ -49,10 +49,10 @@
 
 ## User Interface
 - [x] Design main game screen layout
-- [ ] Create character status panel
-- [ ] Implement minimap for explored areas
-- [ ] Create action bar for common commands
-- [ ] Develop message log system
+- [x] Create character status panel
+- [x] Implement minimap for explored areas
+- [x] Create action bar for common commands
+- [x] Develop message log system
 - [ ] Implement keyboard controls
 - [ ] Implement mouse/touch controls
 - [ ] Create inventory management screen

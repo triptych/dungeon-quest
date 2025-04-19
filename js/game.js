@@ -95,10 +95,10 @@ const Game = {
         Player.placeAtEntrance();
 
         // Update UI
-        UI.updateGameScreen();
+        this.updateUI();
 
         // Add welcome message
-        UI.addMessage('Welcome to the dungeon! Find the stairs to descend deeper.', 'system');
+        UI.logMessage('Welcome to the dungeon! Find the stairs to descend deeper.', 'system');
     },
 
     /**
@@ -136,7 +136,24 @@ const Game = {
         Dungeon.updateVisibility(Player.x, Player.y, this.settings.visibilityRadius);
 
         // Update UI
-        UI.updateGameScreen();
+        this.updateUI();
+    },
+
+    /**
+     * Update all UI elements
+     */
+    updateUI: function() {
+        // Update player stats
+        UI.updatePlayerStats(Player);
+
+        // Update minimap
+        UI.renderMinimap(Dungeon, Player);
+
+        // Update action buttons based on game state
+        UI.updateActionButtons({
+            player: Player,
+            enemyInRange: Entities.isEnemyInRange(Player.x, Player.y, 1),
+        });
     },
 
     /**
@@ -151,10 +168,10 @@ const Game = {
         };
 
         if (Utils.saveToStorage('dungeonQuest_saveGame', saveData)) {
-            UI.addMessage('Game saved successfully.', 'system');
+            UI.logMessage('Game saved successfully.', 'system');
             return true;
         } else {
-            UI.addMessage('Failed to save game!', 'system');
+            UI.logMessage('Failed to save game!', 'system');
             return false;
         }
     },
@@ -166,7 +183,7 @@ const Game = {
         const saveData = Utils.loadFromStorage('dungeonQuest_saveGame');
 
         if (!saveData) {
-            UI.addMessage('No saved game found!', 'system');
+            UI.logMessage('No saved game found!', 'system');
             return false;
         }
 
@@ -180,8 +197,8 @@ const Game = {
         Entities.loadSaveData(saveData.entities);
 
         // Update UI
-        UI.updateGameScreen();
-        UI.addMessage('Game loaded successfully.', 'system');
+        this.updateUI();
+        UI.logMessage('Game loaded successfully.', 'system');
         return true;
     }
 };

@@ -133,7 +133,7 @@ const Entities = {
         Player.takeDamage(damage);
 
         // Add message
-        UI.addMessage(`${enemy.name} attacks you for ${damage} damage!`, 'combat');
+        UI.logMessage(`${enemy.name} attacks you for ${damage} damage!`, 'combat');
     },
 
     /**
@@ -354,7 +354,7 @@ const Entities = {
 
         enemy.hp -= actualDamage;
 
-        UI.addMessage(`You hit the ${enemy.name} for ${actualDamage} damage!`, 'combat');
+        UI.logMessage(`You hit the ${enemy.name} for ${actualDamage} damage!`, 'combat');
 
         // Check if enemy died
         if (enemy.hp <= 0) {
@@ -370,7 +370,7 @@ const Entities = {
      * @returns {boolean} Always returns true
      */
     killEnemy: function(enemy) {
-        UI.addMessage(`You defeated the ${enemy.name}!`, 'combat');
+        UI.logMessage(`You defeated the ${enemy.name}!`, 'combat');
 
         // Grant XP
         Player.addExperience(enemy.xpValue);
@@ -402,5 +402,22 @@ const Entities = {
      */
     loadSaveData: function(data) {
         this.entities = data.entities;
+    },
+
+    /**
+     * Check if any enemy is within range of the player
+     * @param {number} x - X coordinate to check from (usually player's x)
+     * @param {number} y - Y coordinate to check from (usually player's y)
+     * @param {number} range - The distance to check
+     * @returns {boolean} True if an enemy is in range
+     */
+    isEnemyInRange: function(x, y, range) {
+        return this.entities.some(entity => {
+            if (entity.type === this.ENTITY_TYPES.ENEMY) {
+                const distance = Utils.gridDistance(x, y, entity.x, entity.y);
+                return distance <= range;
+            }
+            return false;
+        });
     }
 };
