@@ -1,0 +1,87 @@
+/* Dungeon Quest - Dungeon Layout Styles */
+
+/* Dungeon Grid Container */
+.dungeon-grid {
+    display: grid;
+    gap: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Cell Types */
+.cell {
+    position: relative;
+    min-width: 32px;
+    min-height: 32px;
+    text-align: center;
+    font-size: 20px;
+    line-height: 32px;
+    transition: background-color 0.2s;
+}
+
+.cell-wall {
+    background-color: #3a3a3a;
+    border: 1px solid #444;
+}
+
+.cell-floor {
+    background-color: #222;
+    border: 1px solid #333;
+}
+
+.cell-door {
+    background-color: #553622;
+    border: 1px solid #704e33;
+}
+
+.cell-stairs {
+    background-color: #222;
+    color: #aaa;
+}
+
+/* Fog of War */
+.cell-hidden {
+    background-color: #111;
+    border-color: #1a1a1a;
+}
+
+.cell-explored {
+    opacity: 0.7;
+}
+
+/* Room Features */
+.cell-trap {
+    position: relative;
+}
+
+.cell-trap::after {
+    content: "^";
+    color: #f55;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+}
+
+/* Cell Contents */
+.cell-item {
+    position: relative;
+}
+
+.cell-item::after {
+    content: "?";
+    color: #fc0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+}
+
+/* Visibility Effects */
+.cell-visible {
+    box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.1);
+}

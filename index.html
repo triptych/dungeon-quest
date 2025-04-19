@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Dungeon Quest</title>
+        <link rel="stylesheet" href="css/main.css">
+        <link rel="stylesheet" href="css/dungeon.css">
+        <link rel="stylesheet" href="css/entities.css">
+        <link rel="stylesheet" href="css/ui.css">
+        <link rel="stylesheet" href="css/animations.css">
+    </head>
+    <body>
+        <div id="game-container">
+            <div id="dungeon-view"></div>
+            <div id="mini-map" class="hidden"></div>
+            <button id="toggle-minimap">Map</button>
+
+            <div id="status-panel">
+                <div class="status-block character-info">
+                    <div class="status-label">Character</div>
+                    <div id="character-name">Warrior</div>
+                    <div id="character-level">Level 1</div>
+                </div>
+
+                <div class="status-block">
+                    <div class="status-label">Health</div>
+                    <div class="status-bar health-bar">
+                        <div class="bar-fill"></div>
+                        <div class="bar-text">75/100</div>
+                    </div>
+                    <div class="status-label">Energy</div>
+                    <div class="status-bar energy-bar">
+                        <div class="bar-fill"></div>
+                        <div class="bar-text">50/100</div>
+                    </div>
+                </div>
+
+                <div class="status-block stats">
+                    <div class="status-label">Stats</div>
+                    <div class="stat-row">STR:
+                        <span id="stat-str">10</span></div>
+                    <div class="stat-row">AGI:
+                        <span id="stat-agi">10</span></div>
+                    <div class="stat-row">INT:
+                        <span id="stat-int">10</span></div>
+                    <div class="stat-row">CON:
+                        <span id="stat-con">10</span></div>
+                </div>
+            </div>
+
+            <div id="action-bar">
+                <button class="action-button" id="action-attack">Attack</button>
+                <button class="action-button" id="action-special">Special</button>
+                <button class="action-button" id="action-item">Item</button>
+                <button class="action-button" id="action-wait">Wait</button>
+                <button class="action-button" id="action-inventory">Inventory</button>
+            </div>
+
+            <div id="message-log">
+                <div class="message message-system">Welcome to Dungeon Quest!</div>
+                <div class="message message-system">Use arrow keys or WASD to move.</div>
+            </div>
+        </div>
+
+        <!-- Scripts -->
+        <script src="js/utils.js"></script>
+        <script src="js/dungeon.js"></script>
+        <script src="js/player.js"></script>
+        <script src="js/entities.js"></script>
+        <script src="js/combat.js"></script>
+        <script src="js/items.js"></script>
+        <script src="js/ui.js"></script>
+        <script src="js/game.js"></script>
+    </body>
+</html>

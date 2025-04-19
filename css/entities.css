@@ -1,0 +1,111 @@
+/* Dungeon Quest - Character and Monster Styles */
+
+/* Player Character */
+.player {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    z-index: 10;
+    transition: transform 0.2s ease;
+}
+
+.player::after {
+    content: "@";
+    color: #5df;
+    font-size: 24px;
+    font-weight: bold;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    line-height: 32px;
+}
+
+/* Player Classes */
+.player-warrior::after {
+    color: #f55;
+}
+
+.player-rogue::after {
+    color: #5d5;
+}
+
+.player-mage::after {
+    color: #55f;
+}
+
+.player-cleric::after {
+    color: #fd5;
+}
+
+/* Enemies */
+.enemy {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    z-index: 5;
+    transition: transform 0.2s ease;
+}
+
+.enemy::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    line-height: 32px;
+}
+
+/* Enemy Types */
+.enemy-melee::after {
+    content: "m";
+    color: #f55;
+    font-size: 22px;
+}
+
+.enemy-ranged::after {
+    content: "r";
+    color: #5d5;
+    font-size: 22px;
+}
+
+.enemy-magic::after {
+    content: "s";
+    color: #55f;
+    font-size: 22px;
+}
+
+.enemy-boss::after {
+    content: "B";
+    color: #f5f;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Entity States */
+.entity-damaged {
+    animation: damage-flash 0.3s;
+}
+
+.entity-attacking {
+    animation: attack-motion 0.4s;
+}
+
+.entity-dead {
+    opacity: 0.5;
+}
+
+/* Animations */
+@keyframes damage-flash {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(3); background-color: #700; }
+}
+
+@keyframes attack-motion {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-3px); }
+    75% { transform: translateX(3px); }
+}

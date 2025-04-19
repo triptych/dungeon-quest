@@ -1,0 +1,101 @@
+/* Dungeon Quest - Main CSS */
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    font-family: 'Courier New', monospace;
+    background-color: #111;
+    color: #eee;
+    overflow: hidden;
+}
+
+#game-container {
+    display: grid;
+    grid-template-columns: 70% 30%;
+    grid-template-rows: auto 80px 100px;
+    grid-template-areas:
+        "dungeon status"
+        "action action"
+        "log log";
+    gap: 10px;
+    height: 100vh;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px;
+    position: relative;
+}
+
+/* Typography */
+h1, h2, h3, h4 {
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Utility Classes */
+.hidden {
+    display: none !important;
+}
+
+.pixel-art {
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+}
+
+/* Main Game Layout */
+#dungeon-view {
+    grid-area: dungeon;
+    background-color: #222;
+    border: 2px solid #444;
+    overflow: hidden;
+    position: relative;
+    min-height: calc(100vh - 210px);
+}
+
+#status-panel {
+    grid-area: status;
+}
+
+#action-bar {
+    grid-area: action;
+}
+
+#message-log {
+    grid-area: log;
+}
+
+/* Toggle button for minimap */
+#toggle-minimap {
+    position: absolute;
+    top: 10px;
+    right: 170px;
+    background-color: #333;
+    border: 1px solid #555;
+    color: #eee;
+    padding: 5px 10px;
+    cursor: pointer;
+    z-index: 101;
+}
+
+#toggle-minimap:hover {
+    background-color: #444;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    #game-container {
+        padding: 5px;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+}
