@@ -1,5 +1,33 @@
 # Dungeon Quest: Release Notes
 
+## Version 0.8 - Item System Implementation (April 19, 2025)
+
+### Added
+- Designed and implemented comprehensive item category system
+- Created five distinct item categories: weapons, armor, accessories, consumables, and charms
+- Implemented item rarity system with five tiers: common, uncommon, rare, epic, and legendary
+- Added stat scaling based on item level and rarity
+- Developed item generation system for dungeon population
+- Created detailed item property generation including names, descriptions, and stats
+- Implemented special effects for high-rarity items
+- Added durability system for equipment items
+- Created consumable item usage system with various effect types
+- Implemented item value calculation based on category, rarity, and level
+
+### Technical Details
+- Extended items.js with robust category and rarity definitions
+- Created procedural item generation for diverse loot
+- Implemented stat calculation algorithms based on item properties
+- Developed item effect application system for consumables
+- Added special effect generation for legendary and epic items
+- Created dungeon item population algorithm with room-based distribution
+- Implemented dynamic naming system with prefixes and suffixes based on rarity
+
+### Next Steps
+- Create item generation algorithms based on dungeon depth
+- Design unique and legendary items with special effects
+- Implement visual representation of items in the game world
+
 ## Version 0.7 - Character Sheet Implementation (April 19, 2025)
 
 ### Added

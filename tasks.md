@@ -74,8 +74,8 @@
 - [ ] Implement lighting and shadow effects
 
 ## Item System
-- [ ] Create items.js file for item management
-- [ ] Design item categories (weapons, armor, consumables, charms)
+- [x] Create items.js file for item management
+- [x] Design item categories (weapons, armor, consumables, charms)
 - [ ] Implement item rarity system with stat scaling
 - [ ] Create item generation algorithms based on dungeon depth
 - [ ] Design unique and legendary items with special effects
