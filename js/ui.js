@@ -5,33 +5,7 @@
 
 const UI = {
     // UI elements cache
-    elements: {
-        dungeon: document.getElementById('dungeon-view'),
-        minimap: document.getElementById('mini-map'),
-        toggleMinimapBtn: document.getElementById('toggle-minimap'),
-        statusPanel: document.getElementById('status-panel'),
-        messageLog: document.getElementById('message-log'),
-        actionBar: document.getElementById('action-bar'),
-
-        // Status elements
-        characterName: document.getElementById('character-name'),
-        characterLevel: document.getElementById('character-level'),
-        healthBar: document.querySelector('.health-bar .bar-fill'),
-        healthText: document.querySelector('.health-bar .bar-text'),
-        energyBar: document.querySelector('.energy-bar .bar-fill'),
-        energyText: document.querySelector('.energy-bar .bar-text'),
-        statStr: document.getElementById('stat-str'),
-        statAgi: document.getElementById('stat-agi'),
-        statInt: document.getElementById('stat-int'),
-        statCon: document.getElementById('stat-con'),
-
-        // Action buttons
-        actionAttack: document.getElementById('action-attack'),
-        actionSpecial: document.getElementById('action-special'),
-        actionItem: document.getElementById('action-item'),
-        actionWait: document.getElementById('action-wait'),
-        actionInventory: document.getElementById('action-inventory')
-    },
+    elements: {},
 
     /**
      * Initialize the UI module
@@ -85,31 +59,31 @@ const UI = {
             this.elements.minimap.classList.toggle('hidden');
         });
 
-        // Action buttons
-        this.elements.actionAttack.addEventListener('click', () => {
+        // Action buttons - Use one-time event binding to prevent duplicates
+        this.elements.actionAttack.onclick = () => {
             this.logMessage('You prepare to attack!', 'combat');
             // Game.performAction('attack');
-        });
+        };
 
-        this.elements.actionSpecial.addEventListener('click', () => {
+        this.elements.actionSpecial.onclick = () => {
             this.logMessage('Choose a special attack...', 'system');
             // Game.showSpecialAttacks();
-        });
+        };
 
-        this.elements.actionItem.addEventListener('click', () => {
+        this.elements.actionItem.onclick = () => {
             this.logMessage('Choose an item to use...', 'system');
             // Game.showItems();
-        });
+        };
 
-        this.elements.actionWait.addEventListener('click', () => {
+        this.elements.actionWait.onclick = () => {
             this.logMessage('You wait a turn...', 'system');
             // Game.performAction('wait');
-        });
+        };
 
-        this.elements.actionInventory.addEventListener('click', () => {
+        this.elements.actionInventory.onclick = () => {
             this.logMessage('Opening inventory...', 'system');
             // Game.openInventory();
-        });
+        };
     },
 
     /**
