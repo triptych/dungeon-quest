@@ -1,5 +1,13 @@
 # Dungeon Quest: Release Notes
 
+## Version 0.9 - Item Pickup Bug Fix (April 19, 2025)
+
+### Fixed
+- Fixed the spacebar item pickup functionality which wasn't working properly
+- Implemented proper handling of player actions in the handlePlayerAction() function
+- Added logic to handle picking up items when the player presses spacebar while standing on an item
+- Added functionality to use the exit stairs when player presses spacebar on the exit tile
+
 ## Version 0.8 - Item System Implementation (April 19, 2025)
 
 ### Added

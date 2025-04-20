@@ -111,13 +111,24 @@ const Game = {
         const clickX = (event.clientX || event.pageX) - rect.left;
         const clickY = (event.clientY || event.pageY) - rect.top;
 
-        // Calculate cell size based on dungeon view dimensions and dungeon size
-        const cellWidth = rect.width / Dungeon.width;
-        const cellHeight = rect.height / Dungeon.height;
+        // Calculate cell size
+        const cellSize = 32; // Should match the cellSize in UI.renderDungeon
 
-        // Calculate which cell was clicked
-        const cellX = Math.floor(clickX / cellWidth);
-        const cellY = Math.floor(clickY / cellHeight);
+        // Calculate how many cells can fit in the viewport
+        const visibleCellsX = Math.ceil(rect.width / cellSize);
+        const visibleCellsY = Math.ceil(rect.height / cellSize);
+
+        // Calculate camera position (centered on player)
+        const cameraX = Math.max(Math.floor(visibleCellsX / 2), Math.min(Dungeon.width - Math.floor(visibleCellsX / 2), Player.x));
+        const cameraY = Math.max(Math.floor(visibleCellsY / 2), Math.min(Dungeon.height - Math.floor(visibleCellsY / 2), Player.y));
+
+        // Calculate the visible area boundaries
+        const startX = Math.max(0, cameraX - Math.floor(visibleCellsX / 2));
+        const startY = Math.max(0, cameraY - Math.floor(visibleCellsY / 2));
+
+        // Calculate which cell was clicked (accounting for camera position)
+        const cellX = Math.floor(clickX / cellSize) + startX;
+        const cellY = Math.floor(clickY / cellSize) + startY;
 
         // Safety check for within bounds
         if (!Utils.isInBounds(cellX, cellY, Dungeon.width, Dungeon.height)) {
@@ -184,6 +195,14 @@ const Game = {
         // Generate first dungeon level
         Dungeon.generate(this.settings.dungeonWidth, this.settings.dungeonHeight, this.state.level);
 
+        // Populate the dungeon with entities (monsters)
+        Entities.init();
+        Entities.populateDungeon(this.state.level);
+
+        // Populate the dungeon with items
+        Items.init();
+        Items.populateDungeon(Dungeon, this.state.level);
+
         // Place player at entrance
         Player.placeAtEntrance();
 
@@ -206,14 +225,47 @@ const Game = {
         }
     },
 
-    /**
-     * Handle player action (use item, attack, etc.)
-     */
-    handlePlayerAction: function() {
-        // Implementation will depend on context
-        console.log('Player action');
-        this.advanceTurn();
-    },
+/**
+ * Handle player action (use item, attack, etc.)
+ */
+handlePlayerAction: function() {
+    // Check if there's an item at the player's position
+    const item = Items.getItemAt(Player.x, Player.y);
+
+    if (item) {
+        // If there's an item, try to pick it up
+        if (Player.pickupItem()) {
+            this.advanceTurn();
+            return;
+        }
+    }
+
+    // Check if player is at the exit
+    const cellType = Dungeon.grid[Player.y][Player.x];
+    if (cellType === Dungeon.CELL_TYPES.EXIT) {
+        // Go to next level
+        UI.logMessage("Descending to the next level...", 'system');
+        this.state.level++;
+
+        // Generate new dungeon level
+        Dungeon.generate(this.settings.dungeonWidth, this.settings.dungeonHeight, this.state.level);
+
+        // Populate the new level
+        Entities.populateDungeon(this.state.level);
+        Items.populateDungeon(Dungeon, this.state.level);
+
+        // Place player at entrance
+        Player.placeAtEntrance();
+
+        // Update UI
+        this.updateUI();
+        return;
+    }
+
+    // No special action, just advance the turn
+    console.log('Player action - no special interaction');
+    this.advanceTurn();
+},
 
     /**
      * Advance the game by one turn
