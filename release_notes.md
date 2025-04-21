@@ -1,5 +1,71 @@
 # Dungeon Quest: Release Notes
 
+## Version 0.13 - Dungeon Theme Templates (April 20, 2025)
+
+### Added
+- Implemented themed room templates for varied dungeon environments
+- Created five distinct dungeon themes: cave, crypt, ruins, dungeon, and sewer
+- Added theme-specific room generation with appropriate features and layouts
+- Implemented level-based theme selection for progressive environment changes
+- Added environmental features like water, lava, pillars, rubble, and altars
+- Created dynamic room irregularity system for natural-looking caves vs. structured crypts
+
+### Technical Details
+- Extended Dungeon module with comprehensive theme definitions
+- Added ROOM_TEMPLATES system with unique templates for each theme
+- Created addRoomFeatures() function to populate rooms with theme-specific elements
+- Implemented carveRoom() function with irregularity parameter for variable room shapes
+- Added setThemeByLevel() to match dungeon themes to depth progression
+- Updated save/load system to preserve theme information between sessions
+
+## Version 0.12 - Item Menu Implementation (April 20, 2025)
+
+### Added
+- Implemented item/use menu for quick access to consumable items during gameplay
+- Created streamlined interface for selecting and using consumable items
+- Added support for multiple item types with appropriate icons for each type
+- Implemented turn advancement when using items in the menu
+- Ensured interface is consistent with the game's visual style
+
+### Technical Details
+- Added showItemsMenu() function to UI module
+- Connected item menu to action bar's item button
+- Created filtering system to only show usable/consumable items
+- Added category-specific icons for different item types
+- Implemented detailed item descriptions in the menu
+- Connected item usage to the game turn system
+
+## Version 0.11 - Status Panel Improvements (April 20, 2025)
+
+### Added
+- Implemented responsive character stats panel that handles text overflow properly
+- Enhanced status blocks with better spacing and text wrapping
+- Added media queries for mobile-friendly display on smaller screens
+- Improved the overall UI layout for better accessibility across various device sizes
+
+### Technical Details
+- Replaced fixed height with min-height for flexible status panel sizing
+- Added overflow-y: auto to allow scrolling when content exceeds available space
+- Implemented text overflow handling with ellipsis for stat display
+- Created responsive column layout for mobile devices
+- Added proper spacing to prevent overlapping elements
+
+## Version 0.10 - Directional Controls UI (April 20, 2025)
+
+### Added
+- Implemented visual arrow buttons for character movement
+- Created a directional control pad with intuitive layout (up, down, left, right arrows)
+- Added center button for item pickup and stair interaction
+- Designed responsive controls that work well across different screen sizes
+- Maintained keyboard controls (WASD/arrow keys) while adding touch-friendly UI elements
+
+### Technical Details
+- Created new CSS file (movement-controls.css) for the directional control styling
+- Added grid-based layout for intuitive directional pad positioning
+- Implemented event handlers for directional buttons in UI.js
+- Ensured controls integrate with existing movement mechanics
+- Added support for both item pickup and stair interaction through center button
+
 ## Version 0.9 - Item Pickup Bug Fix (April 19, 2025)
 
 ### Fixed

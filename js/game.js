@@ -35,8 +35,11 @@ const Game = {
         Player.init();
         Items.init();
 
-        // Setup event listeners
-        this.setupEventListeners();
+        // Setup event listeners - only if not already set up
+        if (!this.eventsInitialized) {
+            this.setupEventListeners();
+            this.eventsInitialized = true;
+        }
 
         // Show title screen
         UI.showTitleScreen();

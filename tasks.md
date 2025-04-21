@@ -21,7 +21,7 @@
 
 ## Procedural Generation
 - [x] Implement Binary Space Partitioning (BSP) algorithm
-- [ ] Create room templates for different dungeon themes
+- [x] Create room templates for different dungeon themes
 - [x] Develop corridor generation between rooms
 - [ ] Implement difficulty scaling based on depth
 - [x] Create guaranteed path generation to exit
@@ -48,6 +48,7 @@
 - [x] Develop experience and leveling mechanics
 - [x] Build equipment system with slots and bonuses
 - [ ] Implement skill trees for character progression
+- [ ] Add character creator on new game
 
 ## User Interface
 - [x] Design main game screen layout
@@ -61,6 +62,11 @@
 - [x] Design character sheet interface
 - [ ] Build settings and help menus
 - [ ] Implement drag-and-drop functionality
+- [ ] Enable the zoomed out map
+- [x] Enable the item / use menu
+- [x] Add visual arrow buttons for character movement (while keeping WASD keys)
+- [x] Fix character stats panel to handle overflowing elements
+- [ ] Implement monster catalog that tracks encountered monsters
 
 ## Art & Visual Elements
 - [ ] Create pixel art style guide
@@ -72,6 +78,7 @@
 - [ ] Design UI elements and icons
 - [ ] Create visual effects for combat and spells
 - [ ] Implement lighting and shadow effects
+- [ ] Battle animations - make the player and the monster jiggle and emit particles on hits
 
 ## Item System
 - [x] Create items.js file for item management
@@ -127,6 +134,9 @@
 - [ ] Implement auto-save feature at key points
 - [ ] Create multiple save slots for different characters
 - [ ] Design offline capabilities using PWA techniques
+- [ ] Allow to save the game
+- [ ] Add file picker for loading games
+- [ ] Implement save to file with file picker functionality
 
 ## Testing & Optimization
 - [ ] Create test scenarios for game mechanics

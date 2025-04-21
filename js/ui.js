@@ -12,7 +12,13 @@ const UI = {
      */
     init: function() {
         this.cacheElements();
-        this.bindEvents();
+
+        // Only bind events if not already initialized
+        if (!this.eventsInitialized) {
+            this.bindEvents();
+            this.eventsInitialized = true;
+        }
+
         this.setupMinimap();
         console.log('UI module initialized');
     },
@@ -46,7 +52,14 @@ const UI = {
             actionSpecial: document.getElementById('action-special'),
             actionItem: document.getElementById('action-item'),
             actionWait: document.getElementById('action-wait'),
-            actionInventory: document.getElementById('action-inventory')
+            actionInventory: document.getElementById('action-inventory'),
+
+            // Direction controls
+            upButton: document.getElementById('up-button'),
+            rightButton: document.getElementById('right-button'),
+            downButton: document.getElementById('down-button'),
+            leftButton: document.getElementById('left-button'),
+            centerButton: document.getElementById('center-button')
         };
     },
 
@@ -63,13 +76,31 @@ const UI = {
         const dungeonGrid = document.createElement('div');
         dungeonGrid.className = 'dungeon-grid';
 
-        // Set the grid size based on dungeon dimensions
-        dungeonGrid.style.gridTemplateColumns = `repeat(${dungeon.width}, 1fr)`;
-        dungeonGrid.style.gridTemplateRows = `repeat(${dungeon.height}, 1fr)`;
+        // Calculate the visible area dimensions based on the dungeon view size
+        const dungeonViewRect = this.elements.dungeon.getBoundingClientRect();
+        const cellSize = 32; // Base cell size in pixels
 
-        // Create cells for the dungeon
-        for (let y = 0; y < dungeon.height; y++) {
-            for (let x = 0; x < dungeon.width; x++) {
+        // Calculate how many cells can fit in the viewport
+        const visibleCellsX = Math.ceil(dungeonViewRect.width / cellSize);
+        const visibleCellsY = Math.ceil(dungeonViewRect.height / cellSize);
+
+        // Calculate camera position (centered on player)
+        const cameraX = Math.max(Math.floor(visibleCellsX / 2), Math.min(dungeon.width - Math.floor(visibleCellsX / 2), player.x));
+        const cameraY = Math.max(Math.floor(visibleCellsY / 2), Math.min(dungeon.height - Math.floor(visibleCellsY / 2), player.y));
+
+        // Calculate the visible area boundaries
+        const startX = Math.max(0, cameraX - Math.floor(visibleCellsX / 2));
+        const endX = Math.min(dungeon.width, startX + visibleCellsX);
+        const startY = Math.max(0, cameraY - Math.floor(visibleCellsY / 2));
+        const endY = Math.min(dungeon.height, startY + visibleCellsY);
+
+        // Set the grid size based on visible area dimensions
+        dungeonGrid.style.gridTemplateColumns = `repeat(${endX - startX}, 1fr)`;
+        dungeonGrid.style.gridTemplateRows = `repeat(${endY - startY}, 1fr)`;
+
+        // Create cells for the visible portion of the dungeon
+        for (let y = startY; y < endY; y++) {
+            for (let x = startX; x < endX; x++) {
                 const cell = document.createElement('div');
                 cell.className = 'cell';
                 cell.dataset.x = x;
@@ -142,6 +173,41 @@ const UI = {
 
                         cell.appendChild(entityIcon);
                     }
+
+                    // Check if any items are here
+                    const item = Items.getItemAt(x, y);
+                    if (item && dungeon.visible[y][x]) {
+                        const itemIcon = document.createElement('div');
+                        itemIcon.className = `item-icon item-${item.category}`;
+
+                        // Set icon based on item category
+                        if (item.category === 'weapon') {
+                            itemIcon.textContent = '⚔';
+                        } else if (item.category === 'armor') {
+                            itemIcon.textContent = '🛡';
+                        } else if (item.category === 'accessory') {
+                            itemIcon.textContent = '💍';
+                        } else if (item.category === 'consumable') {
+                            if (item.type === 'healthPotion') {
+                                itemIcon.textContent = '🧪';
+                            } else if (item.type === 'scroll') {
+                                itemIcon.textContent = '📜';
+                            } else {
+                                itemIcon.textContent = '⚗';
+                            }
+                        } else if (item.category === 'charm') {
+                            itemIcon.textContent = '✨';
+                        } else {
+                            itemIcon.textContent = '?';
+                        }
+
+                        // Add rarity color
+                        if (item.rarity) {
+                            itemIcon.style.color = Items.rarities[item.rarity].color;
+                        }
+
+                        cell.appendChild(itemIcon);
+                    }
                 } else {
                     // Hidden cell (fog of war)
                     cell.classList.add('cell-hidden');
@@ -164,6 +230,47 @@ const UI = {
             this.elements.minimap.classList.toggle('hidden');
         });
 
+        // Direction controls
+        if (this.elements.upButton) {
+            this.elements.upButton.addEventListener('click', () => {
+                if (Game.state.running) {
+                    Game.handlePlayerMove(0, -1);
+                }
+            });
+        }
+
+        if (this.elements.rightButton) {
+            this.elements.rightButton.addEventListener('click', () => {
+                if (Game.state.running) {
+                    Game.handlePlayerMove(1, 0);
+                }
+            });
+        }
+
+        if (this.elements.downButton) {
+            this.elements.downButton.addEventListener('click', () => {
+                if (Game.state.running) {
+                    Game.handlePlayerMove(0, 1);
+                }
+            });
+        }
+
+        if (this.elements.leftButton) {
+            this.elements.leftButton.addEventListener('click', () => {
+                if (Game.state.running) {
+                    Game.handlePlayerMove(-1, 0);
+                }
+            });
+        }
+
+        if (this.elements.centerButton) {
+            this.elements.centerButton.addEventListener('click', () => {
+                if (Game.state.running) {
+                    Game.handlePlayerAction();
+                }
+            });
+        }
+
         // Action buttons - Use one-time event binding to prevent duplicates
         this.elements.actionAttack.onclick = () => {
             this.logMessage('You prepare to attack!', 'combat');
@@ -177,7 +284,7 @@ const UI = {
 
         this.elements.actionItem.onclick = () => {
             this.logMessage('Choose an item to use...', 'system');
-            // Game.showItems();
+            this.showItemsMenu();
         };
 
         this.elements.actionWait.onclick = () => {
@@ -992,6 +1099,163 @@ const UI = {
 
         // Add to overlay and then to document
         overlay.appendChild(characterSheet);
+        document.body.appendChild(overlay);
+    },
+
+    /**
+     * Show items menu for quick use during gameplay
+     */
+    showItemsMenu: function() {
+        // Create overlay
+        const overlay = document.createElement('div');
+        overlay.className = 'dialog-overlay';
+
+        // Create items menu container
+        const itemsMenu = document.createElement('div');
+        itemsMenu.id = 'items-menu';
+        itemsMenu.className = 'game-menu';
+
+        // Create header
+        const header = document.createElement('div');
+        header.className = 'inventory-header';
+
+        const title = document.createElement('h2');
+        title.textContent = 'Use Item';
+        header.appendChild(title);
+
+        itemsMenu.appendChild(header);
+
+        // Create item list
+        const itemList = document.createElement('div');
+        itemList.className = 'item-list';
+
+        // Check for usable items in inventory
+        const usableItems = Player.inventory.filter(item =>
+            item.category === 'consumable' || item.usable === true
+        );
+
+        if (usableItems.length === 0) {
+            const emptyMessage = document.createElement('div');
+            emptyMessage.textContent = 'No usable items in inventory';
+            emptyMessage.style.color = '#666';
+            emptyMessage.style.padding = '10px';
+            itemList.appendChild(emptyMessage);
+        } else {
+            usableItems.forEach((item, index) => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'inventory-item';
+                itemElement.dataset.index = Player.inventory.indexOf(item); // Store the index in the main inventory
+
+                // Create item icon
+                const icon = document.createElement('div');
+                icon.className = 'item-icon';
+
+                // Set icon based on item type
+                if (item.category === 'consumable') {
+                    if (item.type === 'healthPotion') {
+                        icon.textContent = '🧪';
+                    } else if (item.type === 'energyPotion') {
+                        icon.textContent = '⚡';
+                    } else if (item.type === 'elixir') {
+                        icon.textContent = '⚗';
+                    } else if (item.type === 'scroll') {
+                        icon.textContent = '📜';
+                    } else if (item.type === 'food') {
+                        icon.textContent = '🍖';
+                    } else {
+                        icon.textContent = '🔮';
+                    }
+                } else {
+                    icon.textContent = '✨';
+                }
+
+                // Add rarity color
+                if (item.rarity) {
+                    icon.style.color = Items.rarities[item.rarity].color;
+                }
+
+                itemElement.appendChild(icon);
+
+                // Create item name
+                const name = document.createElement('div');
+                name.className = 'item-name';
+                name.textContent = item.name;
+                itemElement.appendChild(name);
+
+                // Add click handler for selection
+                itemElement.addEventListener('click', () => {
+                    // Remove selected class from all items
+                    document.querySelectorAll('.inventory-item').forEach(el => {
+                        el.classList.remove('selected');
+                    });
+
+                    // Add selected class to this item
+                    itemElement.classList.add('selected');
+
+                    // Update item description
+                    const description = document.querySelector('#items-menu .item-description');
+                    if (description && item.description) {
+                        description.textContent = item.description;
+                    } else if (description) {
+                        description.textContent = 'This item can be used during combat or exploration.';
+                    }
+
+                    // Enable use button
+                    const useButton = document.getElementById('item-use-btn');
+                    if (useButton) {
+                        useButton.disabled = false;
+                    }
+                });
+
+                itemList.appendChild(itemElement);
+            });
+        }
+
+        itemsMenu.appendChild(itemList);
+
+        // Item description section
+        const descriptionSection = document.createElement('div');
+        descriptionSection.className = 'item-description';
+        descriptionSection.textContent = 'Select an item to see its description.';
+        itemsMenu.appendChild(descriptionSection);
+
+        // Action buttons
+        const actionSection = document.createElement('div');
+        actionSection.className = 'inventory-actions';
+
+        const useButton = document.createElement('button');
+        useButton.id = 'item-use-btn';
+        useButton.textContent = 'Use';
+        useButton.disabled = usableItems.length === 0;
+        useButton.addEventListener('click', () => {
+            const selectedItem = document.querySelector('#items-menu .inventory-item.selected');
+            if (selectedItem) {
+                const index = parseInt(selectedItem.dataset.index);
+                if (Player.useItem(index)) {
+                    // Close the menu after using the item
+                    document.body.removeChild(overlay);
+
+                    // Update UI to reflect changes
+                    Game.updateUI();
+
+                    // Advance the game turn since using an item is an action
+                    Game.advanceTurn();
+                }
+            }
+        });
+        actionSection.appendChild(useButton);
+
+        const cancelButton = document.createElement('button');
+        cancelButton.textContent = 'Cancel';
+        cancelButton.addEventListener('click', () => {
+            document.body.removeChild(overlay);
+        });
+        actionSection.appendChild(cancelButton);
+
+        itemsMenu.appendChild(actionSection);
+
+        // Add to overlay and then to document
+        overlay.appendChild(itemsMenu);
         document.body.appendChild(overlay);
     },
 

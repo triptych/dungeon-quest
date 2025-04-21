@@ -9,7 +9,20 @@
     border: 2px solid #444;
     padding: 10px;
     margin-top: 10px;
-    height: 80px;
+    min-height: 80px;
+    max-height: 100%;
+    overflow-y: auto;
+}
+
+/* Responsive status panel layout */
+@media (max-width: 768px) {
+    #status-panel {
+        flex-direction: column;
+    }
+
+    .status-block {
+        margin-bottom: 10px;
+    }
 }
 
 .status-bar {
@@ -54,12 +67,30 @@
     flex-direction: column;
     flex: 1;
     padding: 0 10px;
+    min-width: 0; /* Allows content to shrink below min-content width */
+    overflow-wrap: break-word; /* Ensures text wraps instead of overflowing */
 }
 
 .status-label {
     font-size: 12px;
     margin-bottom: 2px;
     color: #aaa;
+}
+
+/* Stats Block */
+.stats {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Action Bar */

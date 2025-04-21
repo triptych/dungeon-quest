@@ -9,12 +9,22 @@
         <link rel="stylesheet" href="css/entities.css">
         <link rel="stylesheet" href="css/ui.css">
         <link rel="stylesheet" href="css/animations.css">
+        <link rel="stylesheet" href="css/movement-controls.css">
     </head>
     <body>
         <div id="game-container">
             <div id="dungeon-view"></div>
             <div id="mini-map" class="hidden"></div>
             <button id="toggle-minimap">Map</button>
+
+            <!-- Directional Control Pad -->
+            <div id="direction-controls">
+                <div id="up-button" class="direction-button">↑</div>
+                <div id="left-button" class="direction-button">←</div>
+                <div id="center-button" class="direction-button">·</div>
+                <div id="right-button" class="direction-button">→</div>
+                <div id="down-button" class="direction-button">↓</div>
+            </div>
 
             <div id="status-panel">
                 <div class="status-block character-info">

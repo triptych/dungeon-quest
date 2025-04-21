@@ -11,6 +11,7 @@ const Dungeon = {
     width: 0,
     height: 0,
     level: 1,
+    theme: 'cave', // Default theme
 
     /** Dungeon features */
     rooms: [],
@@ -28,7 +29,220 @@ const Dungeon = {
         FLOOR: 1,
         DOOR: 2,
         ENTRANCE: 3,
-        EXIT: 4
+        EXIT: 4,
+        WATER: 5,
+        LAVA: 6,
+        CHASM: 7,
+        PILLAR: 8,
+        RUBBLE: 9,
+        ALTAR: 10
+    },
+
+    /** Dungeon themes */
+    THEMES: {
+        CAVE: 'cave',
+        CRYPT: 'crypt',
+        RUINS: 'ruins',
+        DUNGEON: 'dungeon',
+        SEWER: 'sewer'
+    },
+
+    /** Room templates for different themes */
+    ROOM_TEMPLATES: {
+        // Cave themed rooms - organic and irregular shapes
+        cave: [
+            {
+                name: 'standard_cave',
+                minWidth: 5,
+                maxWidth: 12,
+                minHeight: 5,
+                maxHeight: 10,
+                features: [
+                    { type: 'WATER', chance: 0.2, count: { min: 1, max: 3 } },
+                    { type: 'RUBBLE', chance: 0.4, count: { min: 2, max: 6 } }
+                ],
+                irregularity: 0.4 // High irregularity for natural cave feel
+            },
+            {
+                name: 'large_cavern',
+                minWidth: 8,
+                maxWidth: 14,
+                minHeight: 8,
+                maxHeight: 12,
+                features: [
+                    { type: 'WATER', chance: 0.4, count: { min: 2, max: 5 } },
+                    { type: 'RUBBLE', chance: 0.5, count: { min: 3, max: 8 } }
+                ],
+                irregularity: 0.5
+            },
+            {
+                name: 'crystal_cave',
+                minWidth: 6,
+                maxWidth: 10,
+                minHeight: 6,
+                maxHeight: 10,
+                features: [
+                    { type: 'PILLAR', chance: 0.6, count: { min: 3, max: 8 } },
+                    { type: 'RUBBLE', chance: 0.3, count: { min: 1, max: 4 } }
+                ],
+                irregularity: 0.3
+            }
+        ],
+
+        // Crypt themed rooms - more regular, with pillars and altars
+        crypt: [
+            {
+                name: 'burial_chamber',
+                minWidth: 5,
+                maxWidth: 10,
+                minHeight: 5,
+                maxHeight: 8,
+                features: [
+                    { type: 'PILLAR', chance: 0.7, count: { min: 2, max: 4 } },
+                    { type: 'ALTAR', chance: 0.4, count: { min: 1, max: 1 } }
+                ],
+                irregularity: 0.1 // Very regular room shapes
+            },
+            {
+                name: 'crypt_hall',
+                minWidth: 4,
+                maxWidth: 8,
+                minHeight: 8,
+                maxHeight: 14,
+                features: [
+                    { type: 'PILLAR', chance: 0.8, count: { min: 4, max: 8 } }
+                ],
+                irregularity: 0.1
+            },
+            {
+                name: 'tomb_chamber',
+                minWidth: 7,
+                maxWidth: 11,
+                minHeight: 7,
+                maxHeight: 11,
+                features: [
+                    { type: 'ALTAR', chance: 0.8, count: { min: 1, max: 3 } },
+                    { type: 'PILLAR', chance: 0.6, count: { min: 4, max: 8 } }
+                ],
+                irregularity: 0.1
+            }
+        ],
+
+        // Ruins themed rooms - irregular with debris
+        ruins: [
+            {
+                name: 'collapsed_chamber',
+                minWidth: 6,
+                maxWidth: 12,
+                minHeight: 6,
+                maxHeight: 10,
+                features: [
+                    { type: 'RUBBLE', chance: 0.8, count: { min: 4, max: 10 } },
+                    { type: 'PILLAR', chance: 0.5, count: { min: 1, max: 3 } }
+                ],
+                irregularity: 0.3 // Somewhat irregular due to collapse
+            },
+            {
+                name: 'ancient_hall',
+                minWidth: 6,
+                maxWidth: 12,
+                minHeight: 8,
+                maxHeight: 14,
+                features: [
+                    { type: 'PILLAR', chance: 0.7, count: { min: 4, max: 8 } },
+                    { type: 'RUBBLE', chance: 0.5, count: { min: 2, max: 5 } }
+                ],
+                irregularity: 0.2
+            },
+            {
+                name: 'crumbled_room',
+                minWidth: 5,
+                maxWidth: 9,
+                minHeight: 5,
+                maxHeight: 9,
+                features: [
+                    { type: 'RUBBLE', chance: 0.9, count: { min: 3, max: 7 } }
+                ],
+                irregularity: 0.4
+            }
+        ],
+
+        // Classic dungeon themed rooms - regular with pillars
+        dungeon: [
+            {
+                name: 'prison_cell',
+                minWidth: 4,
+                maxWidth: 6,
+                minHeight: 4,
+                maxHeight: 6,
+                features: [
+                    { type: 'RUBBLE', chance: 0.3, count: { min: 0, max: 2 } }
+                ],
+                irregularity: 0.1
+            },
+            {
+                name: 'torture_chamber',
+                minWidth: 6,
+                maxWidth: 10,
+                minHeight: 6,
+                maxHeight: 10,
+                features: [
+                    { type: 'PILLAR', chance: 0.4, count: { min: 0, max: 4 } },
+                    { type: 'ALTAR', chance: 0.5, count: { min: 1, max: 2 } }
+                ],
+                irregularity: 0.1
+            },
+            {
+                name: 'guard_room',
+                minWidth: 7,
+                maxWidth: 11,
+                minHeight: 7,
+                maxHeight: 11,
+                features: [
+                    { type: 'PILLAR', chance: 0.3, count: { min: 0, max: 4 } }
+                ],
+                irregularity: 0.1
+            }
+        ],
+
+        // Sewer themed rooms - water features
+        sewer: [
+            {
+                name: 'flooded_chamber',
+                minWidth: 6,
+                maxWidth: 10,
+                minHeight: 6,
+                maxHeight: 10,
+                features: [
+                    { type: 'WATER', chance: 0.9, count: { min: 5, max: 15 } }
+                ],
+                irregularity: 0.2
+            },
+            {
+                name: 'sewer_junction',
+                minWidth: 8,
+                maxWidth: 12,
+                minHeight: 8,
+                maxHeight: 12,
+                features: [
+                    { type: 'WATER', chance: 0.7, count: { min: 3, max: 8 } },
+                    { type: 'RUBBLE', chance: 0.3, count: { min: 1, max: 3 } }
+                ],
+                irregularity: 0.3
+            },
+            {
+                name: 'maintenance_room',
+                minWidth: 5,
+                maxWidth: 8,
+                minHeight: 5,
+                maxHeight: 8,
+                features: [
+                    { type: 'WATER', chance: 0.4, count: { min: 1, max: 3 } },
+                    { type: 'PILLAR', chance: 0.5, count: { min: 2, max: 4 } }
+                ],
+                irregularity: 0.1
+            }
+        ]
     },
 
     /**
@@ -46,6 +260,9 @@ const Dungeon = {
         this.level = level;
         this.rooms = [];
         this.corridors = [];
+
+        // Set theme based on level
+        this.setThemeByLevel(level);
 
         try {
             // Create empty grid filled with walls
@@ -87,7 +304,28 @@ const Dungeon = {
         // Place items, traps, etc. based on level
         this.populateDungeon();
 
-        console.log(`Dungeon level ${level} generated successfully`);
+        console.log(`Dungeon level ${level} generated successfully with theme: ${this.theme}`);
+    },
+
+    /**
+     * Set dungeon theme based on level
+     * @param {number} level - Dungeon level
+     */
+    setThemeByLevel: function(level) {
+        // Determine theme based on dungeon level
+        if (level <= 3) {
+            this.theme = this.THEMES.DUNGEON;
+        } else if (level <= 6) {
+            this.theme = this.THEMES.CAVE;
+        } else if (level <= 9) {
+            this.theme = this.THEMES.SEWER;
+        } else if (level <= 12) {
+            this.theme = this.THEMES.RUINS;
+        } else {
+            this.theme = this.THEMES.CRYPT;
+        }
+
+        console.log(`Set dungeon theme to ${this.theme} for level ${level}`);
     },
 
     /**
@@ -102,54 +340,164 @@ const Dungeon = {
             height: this.height
         };
 
+        // Adjust recursion levels based on dungeon size to prevent overly small partitions
+        const recursionLevels = Math.min(4, Math.floor(Math.log2(Math.min(this.width, this.height) / 10)));
+
         // Split the space recursively
-        const partitions = this.splitPartition(rootPartition, 4); // 4 levels of recursion
+        const partitions = this.splitPartition(rootPartition, recursionLevels);
 
         // Create rooms within the partitions
         partitions.forEach(partition => {
-            // Add some randomness to room size and position within partition
-            const padding = 2;
-            const roomWidth = Utils.randomInt(
-                Math.min(7, partition.width - 2 * padding),
-                Math.min(partition.width - 2 * padding, 12)
-            );
-            const roomHeight = Utils.randomInt(
-                Math.min(5, partition.height - 2 * padding),
-                Math.min(partition.height - 2 * padding, 10)
-            );
+            try {
+                // Ensure minimum dimensions for partitions to avoid invalid room calculations
+                if (partition.width < 6 || partition.height < 6) {
+                    return; // Skip this partition if it's too small
+                }
 
-            // Position the room with some randomness
-            const roomX = partition.x + padding + Utils.randomInt(0, partition.width - roomWidth - 2 * padding);
-            const roomY = partition.y + padding + Utils.randomInt(0, partition.height - roomHeight - 2 * padding);
+                // Get room templates for current theme
+                const templates = this.ROOM_TEMPLATES[this.theme];
+                if (!templates || templates.length === 0) {
+                    console.error(`No room templates found for theme: ${this.theme}`);
+                    return;
+                }
 
-            // Create the room
-            const room = {
-                x: roomX,
-                y: roomY,
-                width: roomWidth,
-                height: roomHeight,
-                centerX: Math.floor(roomX + roomWidth / 2),
-                centerY: Math.floor(roomY + roomHeight / 2)
-            };
+                // Select a random template for this room
+                const template = templates[Utils.randomInt(0, templates.length - 1)];
 
-            // Add the room to our list
-            this.rooms.push(room);
+                // Add some randomness to room size and position within partition
+                const padding = 2;
 
-            // Carve the room into the grid
-            for (let y = room.y; y < room.y + room.height; y++) {
-                for (let x = room.x; x < room.x + room.width; x++) {
-                    if (Utils.isInBounds(x, y, this.width, this.height)) {
-                        // Ensure the grid row exists before setting a value
-                        if (!this.grid[y]) {
-                            this.grid[y] = [];
-                        }
-                        this.grid[y][x] = this.CELL_TYPES.FLOOR;
+                // Ensure roomWidth and roomHeight are within template specs and fit partition
+                const minWidth = Math.max(template.minWidth, 3);
+                const maxWidth = Math.min(template.maxWidth, partition.width - 2 * padding);
+                const minHeight = Math.max(template.minHeight, 3);
+                const maxHeight = Math.min(template.maxHeight, partition.height - 2 * padding);
+
+                // Skip if we can't fit a proper room
+                if (minWidth >= maxWidth || minHeight >= maxHeight) {
+                    return;
+                }
+
+                // Generate room dimensions
+                const roomWidth = Utils.randomInt(minWidth, maxWidth);
+                const roomHeight = Utils.randomInt(minHeight, maxHeight);
+
+                // Calculate maximum valid position values
+                const maxRoomX = Math.max(0, partition.width - roomWidth - padding);
+                const maxRoomY = Math.max(0, partition.height - roomHeight - padding);
+
+                // Position the room with some randomness
+                const roomX = partition.x + padding + Utils.randomInt(0, maxRoomX);
+                const roomY = partition.y + padding + Utils.randomInt(0, maxRoomY);
+
+                // Final bounds check to ensure room is within dungeon
+                if (roomX < 0 || roomX + roomWidth >= this.width ||
+                    roomY < 0 || roomY + roomHeight >= this.height) {
+                    console.log(`Skipping room outside bounds: (${roomX},${roomY}) size ${roomWidth}x${roomHeight}`);
+                    return; // Skip this room if it's outside the dungeon bounds
+                }
+
+                // Create the room
+                const room = {
+                    x: roomX,
+                    y: roomY,
+                    width: roomWidth,
+                    height: roomHeight,
+                    centerX: Math.floor(roomX + roomWidth / 2),
+                    centerY: Math.floor(roomY + roomHeight / 2),
+                    template: template.name,
+                    theme: this.theme
+                };
+
+                this.rooms.push(room);
+
+                // Carve the basic room into the grid
+                this.carveRoom(room, template.irregularity);
+
+                // Add template-specific features
+                this.addRoomFeatures(room, template.features);
+
+            } catch (error) {
+                console.error('Error creating room in partition:', error, partition);
+            }
+        });
+
+        console.log(`Generated ${this.rooms.length} rooms with ${this.theme} theme`);
+    },
+
+    /**
+     * Carve a room into the dungeon grid
+     * @param {Object} room - Room data
+     * @param {number} irregularity - How irregular the room shape should be (0-1)
+     */
+    carveRoom: function(room, irregularity = 0) {
+        // Create the basic room shape
+        for (let y = room.y; y < room.y + room.height; y++) {
+            for (let x = room.x; x < room.x + room.width; x++) {
+                if (Utils.isInBounds(x, y, this.width, this.height)) {
+                    // Add irregularity to room edges
+                    const isEdge = x === room.x || x === room.x + room.width - 1 ||
+                                  y === room.y || y === room.y + room.height - 1;
+
+                    if (isEdge && Math.random() < irregularity) {
+                        // Leave this as a wall for irregular edges
+                        continue;
+                    }
+
+                    // Ensure the grid row exists before setting a value
+                    if (!this.grid[y]) {
+                        this.grid[y] = [];
+                    }
+                    this.grid[y][x] = this.CELL_TYPES.FLOOR;
+                }
+            }
+        }
+    },
+
+    /**
+     * Add room features based on template
+     * @param {Object} room - Room data
+     * @param {Array} features - Features to potentially add
+     */
+    addRoomFeatures: function(room, features) {
+        if (!features || features.length === 0) return;
+
+        features.forEach(feature => {
+            // Check if this feature should be added
+            if (Math.random() > feature.chance) return;
+
+            // Determine how many instances of this feature to add
+            const count = Utils.randomInt(feature.count.min, feature.count.max);
+
+            // Get the cell type for this feature
+            const cellType = this.CELL_TYPES[feature.type];
+            if (cellType === undefined) {
+                console.error(`Unknown feature type: ${feature.type}`);
+                return;
+            }
+
+            // Add the feature instances
+            for (let i = 0; i < count; i++) {
+                // Find a valid position (not on edges)
+                let attempts = 0;
+                let placed = false;
+
+                while (!placed && attempts < 10) {
+                    attempts++;
+
+                    // Place away from edges
+                    const x = Utils.randomInt(room.x + 1, room.x + room.width - 2);
+                    const y = Utils.randomInt(room.y + 1, room.y + room.height - 2);
+
+                    // Check if this position is already a floor
+                    if (this.getCellType(x, y) === this.CELL_TYPES.FLOOR) {
+                        // Place the feature
+                        this.grid[y][x] = cellType;
+                        placed = true;
                     }
                 }
             }
         });
-
-        console.log(`Generated ${this.rooms.length} rooms`);
     },
 
     /**
@@ -159,21 +507,29 @@ const Dungeon = {
      * @returns {Array} Array of partitions
      */
     splitPartition: function(partition, depth) {
-        if (depth === 0 || partition.width < 20 || partition.height < 20) {
+        // Base case: stop recursion when we reach max depth or partition is too small
+        if (depth === 0 || partition.width < 15 || partition.height < 15) {
             return [partition];
         }
 
         const partitions = [];
 
-        // Decide whether to split horizontally or vertically
-        const splitHorizontally = Math.random() < 0.5;
+        // Decide whether to split horizontally or vertically based on partition shape
+        // Favor splitting along the longer dimension
+        const splitHorizontally = partition.height > partition.width ||
+                                 (partition.height === partition.width && Math.random() < 0.5);
 
         if (splitHorizontally) {
-            // Split horizontally
-            const splitY = partition.y + Utils.randomInt(
-                partition.height * 0.3,
-                partition.height * 0.7
-            );
+            // Split horizontally - ensure we maintain minimum useful height (7 minimum)
+            const minSplitPosition = partition.y + Math.max(7, Math.floor(partition.height * 0.3));
+            const maxSplitPosition = partition.y + Math.min(partition.height - 7, Math.floor(partition.height * 0.7));
+
+            // Guard against invalid split positions
+            if (maxSplitPosition <= minSplitPosition) {
+                return [partition]; // Cannot split further, return as is
+            }
+
+            const splitY = Utils.randomInt(minSplitPosition, maxSplitPosition);
 
             // Create two new partitions
             const topPartition = {
@@ -187,18 +543,23 @@ const Dungeon = {
                 x: partition.x,
                 y: splitY,
                 width: partition.width,
-                height: partition.height - (splitY - partition.y)
+                height: partition.y + partition.height - splitY
             };
 
             // Recursively split these partitions
             partitions.push(...this.splitPartition(topPartition, depth - 1));
             partitions.push(...this.splitPartition(bottomPartition, depth - 1));
         } else {
-            // Split vertically
-            const splitX = partition.x + Utils.randomInt(
-                partition.width * 0.3,
-                partition.width * 0.7
-            );
+            // Split vertically - ensure we maintain minimum useful width (7 minimum)
+            const minSplitPosition = partition.x + Math.max(7, Math.floor(partition.width * 0.3));
+            const maxSplitPosition = partition.x + Math.min(partition.width - 7, Math.floor(partition.width * 0.7));
+
+            // Guard against invalid split positions
+            if (maxSplitPosition <= minSplitPosition) {
+                return [partition]; // Cannot split further, return as is
+            }
+
+            const splitX = Utils.randomInt(minSplitPosition, maxSplitPosition);
 
             // Create two new partitions
             const leftPartition = {
@@ -211,7 +572,7 @@ const Dungeon = {
             const rightPartition = {
                 x: splitX,
                 y: partition.y,
-                width: partition.width - (splitX - partition.x),
+                width: partition.x + partition.width - splitX,
                 height: partition.height
             };
 
@@ -484,6 +845,7 @@ const Dungeon = {
             width: this.width,
             height: this.height,
             level: this.level,
+            theme: this.theme,
             rooms: this.rooms,
             corridors: this.corridors,
             entrance: this.entrance,
@@ -501,6 +863,7 @@ const Dungeon = {
         this.width = data.width;
         this.height = data.height;
         this.level = data.level;
+        this.theme = data.theme || 'cave'; // Default to cave if no theme in saved data
         this.rooms = data.rooms;
         this.corridors = data.corridors;
         this.entrance = data.entrance;

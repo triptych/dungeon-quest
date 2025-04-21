@@ -1,0 +1,75 @@
+/* Directional Control Pad Styles */
+#direction-controls {
+    position: absolute;
+    bottom: 120px;
+    left: 20px;
+    z-index: 100;
+    display: grid;
+    grid-template-columns: repeat(3, 40px);
+    grid-template-rows: repeat(3, 40px);
+    grid-gap: 2px;
+}
+
+.direction-button {
+    background-color: #333;
+    border: 1px solid #555;
+    color: #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.2s;
+    user-select: none;
+}
+
+.direction-button:hover {
+    background-color: #444;
+}
+
+.direction-button:active {
+    background-color: #555;
+}
+
+#up-button {
+    grid-column: 2;
+    grid-row: 1;
+    border-radius: 5px 5px 0 0;
+}
+
+#right-button {
+    grid-column: 3;
+    grid-row: 2;
+    border-radius: 0 5px 5px 0;
+}
+
+#down-button {
+    grid-column: 2;
+    grid-row: 3;
+    border-radius: 0 0 5px 5px;
+}
+
+#left-button {
+    grid-column: 1;
+    grid-row: 2;
+    border-radius: 5px 0 0 5px;
+}
+
+#center-button {
+    grid-column: 2;
+    grid-row: 2;
+    background-color: #222;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    #direction-controls {
+        bottom: 80px;
+    }
+}
+
+@media (max-width: 480px) {
+    .direction-button {
+        font-size: 16px;
+    }
+}
